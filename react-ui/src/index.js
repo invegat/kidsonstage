@@ -28,8 +28,8 @@ ReactDOM.render(
         <Route path="/signin" component={SignIn} />
         <Route path="/users" component={RequireAuth(Users)} />
         <Route path="/signout" component={SignOut} />
-        <Route path="/signup" component={SignUp} />
-        <Route path="/sign-up" component={Sign_Up} />
+        <Route path="/signup" component={Sign_Up} />
+        <Route path="/sign-up" component={SignUp} />
       </div>
     </Router>
   </Provider>,

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import normalizePhone from './normalizers/normalizePhone';
 import { register } from '../actions';
-import '../index.css';
+import './css/newUser.css';
 
 // const { DOM: { input /* select, textarea */ } } = React;
 
@@ -25,22 +25,22 @@ class NewUserForm extends Component {
   };
   render() {
     const { handleSubmit, pristine, reset, submitting } = this.props;
-    const renderField = ({
-      input,
-      label,
-      type,
-      meta: { touched, error, warning },
-    }) => (
-      <div>
-        <label>{label}</label>
-        <div>
-          <input {...input} placeholder={label} type={type} />
-          {touched &&
-            ((error && <span>{error}</span>) ||
-              (warning && <span>{warning}</span>))}
-        </div>
-      </div>
-    );
+    // const renderField = ({
+    //   input,
+    //   label,
+    //   type,
+    //   meta: { touched, error, warning },
+    // }) => (
+    //   <div>
+    //     <label>{label}</label>
+    //     <div>
+    //       <input {...input} placeholder={label} type={type} />
+    //       {touched &&
+    //         ((error && <span>{error}</span>) ||
+    //           (warning && <span>{warning}</span>))}
+    //     </div>
+    //   </div>
+    // );
     const email = value =>
       (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
         ? 'Invalid email address'
@@ -118,8 +118,22 @@ class NewUserForm extends Component {
           </div>
         </div>
         <div className="flex-center-div">
-          <button className="new-user-action-button" id="new-user-sign-up" type="submit" disabled={pristine || submitting}>Sign Up</button>
-          <button className="new-user-action-button" id="new-user-clear-values" type="button" disabled={pristine || submitting} onClick={reset}>Clear Values</button>
+          <button
+            className="new-user-action-button"
+            id="new-user-sign-up"
+            type="submit"
+            disabled={pristine || submitting}
+          >
+            Sign Up
+          </button>
+          <button
+            className="new-user-action-button"
+            id="new-user-clear-values"
+            type="button"
+            disabled={pristine || submitting}
+            onClick={reset}
+          > Clear Values
+          </button>
         </div>
       </form>
     );
@@ -135,5 +149,4 @@ export default reduxForm({
   touchOnBlur: true,
   fields: ['username', 'email', 'phoneNumber', 'password',
     'confirmPassword', 'byPhone', 'byEmail'],
-  // fields: ['username', 'password', 'confirmPassword'],
 })(connect(mapStateToProps, { register })(NewUserForm));
