@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { Navbar, NavbarBrand } from 'mdbreact';
 import { connect } from 'react-redux';
@@ -16,41 +18,49 @@ class SubscriberBox extends Component {
       eventCode: '',
     };
   }
+
   componentDidMount() {
     this.props.getEventInvites();
     this.userId = Number(sessionStorage.getItem('id'));
   }
+
   componentWillReceiveProps(nextProps) {
-    const newEvs = nextProps.eventInvites.filter(eV =>
-      this.props.eventInvites.findIndex(ceV =>
-        (ceV.eventId === eV.eventId) && (ceV.userId === this.userId)) < 0);
+    const newEvs = nextProps.eventInvites.filter(
+      eV =>
+        this.props.eventInvites.findIndex(
+          ceV => ceV.eventId === eV.eventId && ceV.userId === this.userId
+        ) < 0
+    );
     newEvs.forEach(nEv => this.addInvitedEvent(nEv.eventId));
   }
-  addInvitedEvent = (eventId) => {
+
+  addInvitedEvent = eventId => {
     this.props.getEvent(eventId, 2);
-  }
+  };
+
   render() {
     return (
       <div className="subscriberBox--form_container">
-        <Navbar className="subscriberBox--box_navbar" dark>
+        <Navbar className="subscriberBox--box_navbar" dark expand="md">
           <NavbarBrand tag="span">Subscribe to Event</NavbarBrand>
         </Navbar>
 
-        <form onSubmit={(e) => {
-          // console.log(`SubscriberBox onSubmit eventId ${this.state.eventId}`);
-          if (this.state.eventId > 0) {
-            // addInvitedEvent(this.state.eventId);
-            this.props.invitedEventSubscribe(this.state.eventId);
-          }
-          e.preventDefault();
-        }}
+        <form
+          onSubmit={e => {
+            // console.log(`SubscriberBox onSubmit eventId ${this.state.eventId}`);
+            if (this.state.eventId > 0) {
+              // addInvitedEvent(this.state.eventId);
+              this.props.invitedEventSubscribe(this.state.eventId);
+            }
+            e.preventDefault();
+          }}
         >
           <span>
             <input
               type="text"
               placeholder="Event Invite Code"
               value={this.state.eventCode}
-              onChange={(event) => {
+              onChange={event => {
                 // console.log(`changed value ${event.target.value}`);
                 this.setState({
                   eventCode: event.target.value,
@@ -59,6 +69,7 @@ class SubscriberBox extends Component {
             />
             <button
               id="getEventId"
+              type="button"
               onClick={() => {
                 const { eventCode } = this.state;
                 if (eventCode.length > 0) {
@@ -87,18 +98,20 @@ class SubscriberBox extends Component {
               id="submit"
               type="submit"
               style={{
-              enabled: this.state.eventId > 0,
-              opacity: this.state.eventId > 0 ? 1 : 0.5,
+                enabled: this.state.eventId > 0,
+                opacity: this.state.eventId > 0 ? 1 : 0.5,
               }}
-            >Add Invited Event
+            >
+              Add Invited Event
             </button>
           </div>
-          {this.state.error !== undefined &&
+          {this.state.error !== undefined && (
             <ul>
-              {this.state.errorArray.forEach(error =>
-                <li key={error}>{error}</li>)}
+              {this.state.errorArray.forEach(error => (
+                <li key={error}>{error}</li>
+              ))}
             </ul>
-          }
+          )}
         </form>
       </div>
     );
@@ -115,5 +128,5 @@ export default connect(
     eventInvites: state.eventInvites,
   }),
   // dispatch => ({ loadEvent: eventId => dispatch(getEvent(eventId)) }),
-  { getEvent, invitedEventSubscribe, getEventInvites },
+  { getEvent, invitedEventSubscribe, getEventInvites }
 )(SubscriberBox);

@@ -1,36 +1,14 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Navbar, NavbarBrand } from 'mdbreact';
-import { TextField } from 'material-ui';
+import { TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import '../css/stripeAddressSection.css';
 
 /* eslint-disable react/forbid-prop-types, camelcase */
 
-const renderTextField = ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-  <TextField
-    floatingLabelText={label}
-    floatingLabelFocusStyle={{
-      color: 'black',
-    }}
-    underlineFocusStyle={{
-      borderColor: 'white',
-    }}
-    underlineStyle={{
-      borderColor: 'grey',
-    }}
-    errorText={touched && error}
-    {...input}
-    {...custom}
-    style={{
-      color: 'red',
-    }}
-  />
+const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
+  <TextField hint={label} label={label} error={touched && error} {...input} {...custom} />
 );
 renderTextField.defaultProps = {
   meta: { touched: PropTypes.bool, error: PropTypes.string },
@@ -48,9 +26,14 @@ class AddressSection extends React.Component {
     pristine: PropTypes.bool.isRequired,
     reset: PropTypes.func.isRequired,
     submitting: PropTypes.bool.isRequired,
-  }
+  };
   handleFormSubmit = ({
-    name, address_line1, address_line2, address_city, address_state, address_zip,
+    name,
+    address_line1,
+    address_line2,
+    address_city,
+    address_state,
+    address_zip,
     address_country = 'US',
   }) => {
     // console.log(`username: ${username} password: ${password}`);
@@ -65,12 +48,10 @@ class AddressSection extends React.Component {
     });
   };
   render() {
-    const {
-      handleSubmit, pristine, reset, submitting,
-    } = this.props;
+    const { handleSubmit, pristine, reset, submitting } = this.props;
     return (
       <div className="addressSection--form_container">
-        <Navbar className="addressSection--box_navbar" dark>
+        <Navbar className="addressSection--box_navbar" dark expand="md">
           <NavbarBrand tag="span">Payment Address Info</NavbarBrand>
         </Navbar>
         <form onSubmit={handleSubmit(this.handleFormSubmit)}>
@@ -92,12 +73,7 @@ class AddressSection extends React.Component {
             component={renderTextField}
             placeholder="Address 2"
           />
-          <Field
-            name="address_city"
-            type="text"
-            component={renderTextField}
-            placeholder="City"
-          />
+          <Field name="address_city" type="text" component={renderTextField} placeholder="City" />
           <Field
             name="address_state"
             label="State"
@@ -105,22 +81,13 @@ class AddressSection extends React.Component {
             component={renderTextField}
             placeholder="State"
           />
-          <Field
-            name="address_zip"
-            type="text"
-            component={renderTextField}
-            placeholder="Zip"
-          />
+          <Field name="address_zip" type="text" component={renderTextField} placeholder="Zip" />
           <div className="address--form_buttons">
             <button type="submit" disabled={pristine || submitting}>
-                  Use This Payment Address
+              Use This Payment Address
             </button>
-            <button
-              type="button"
-              disabled={pristine || submitting}
-              onClick={reset}
-            >
-                  Reset
+            <button type="button" disabled={pristine || submitting} onClick={reset}>
+              Reset
             </button>
           </div>
         </form>

@@ -15,19 +15,16 @@ export const CLEAR_USERS = 'CLEAR_USERS';
 /* eslint-disable no-console, semi-style */
 
 axios.defaults.withCredentials = true;
-
+// https://www.whenismykidonstage.com/api
 export const ROOT_URL =
-  (process.env.NODE_ENV === 'production') ?
-    'https://www.whenismykidonstage.com/api'
-    : 'http://localhost:5000/api'
-  ;
+  process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api';
 
 export const authError = error => ({
   type: AUTHENTICATION_ERROR,
   payload: error,
 });
 
-export const register = (user, history) => (dispatch) => {
+export const register = (user, history) => dispatch => {
   if (user.password !== user.confirmPassword) {
     dispatch(authError('Passwords do not match'));
     return;
@@ -42,18 +39,18 @@ export const register = (user, history) => (dispatch) => {
       console.log(`pushing /signin for user ${user.username}`);
       history.push('/signin');
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(`"register" ${err}`);
       dispatch(authError('Failed to register user'));
     });
 };
 
-export const login = (user, history) => (dispatch) => {
+export const login = (user, history) => dispatch => {
   const { username, password } = user;
-  console.log(`username: ${username} password: ${password}`);
+  console.log(`action login username: ${username} password: ${password}`);
   axios
     .post(`${ROOT_URL}/users/login`, user)
-    .then((response) => {
+    .then(response => {
       // console.log(`token: ${response.data.token}  id: ${response.data.id}`);
       sessionStorage.setItem('token', response.data.token);
       sessionStorage.setItem('id', response.data.id);
@@ -67,13 +64,14 @@ export const login = (user, history) => (dispatch) => {
       history.push('/events');
       // console.log(`history keys ${Object.keys(history)}`);
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(`login ${err}`);
       dispatch(authError('Incorrect email/password combo'));
     });
 };
 
-export const logout = () => (dispatch) => {
+export const logout = () => dispatch => {
+  // eslint-disable-next-line no-undef
   sessionStorage.clear();
   window.location = '/';
   dispatch({
@@ -84,7 +82,7 @@ export const logout = () => (dispatch) => {
   });
 };
 
-export const getUser = () => (dispatch) => {
+export const getUser = () => dispatch => {
   const token = sessionStorage.getItem('token');
   const id = sessionStorage.getItem('id');
   // console.log(`getUser for id ${id}`);
@@ -99,7 +97,7 @@ export const getUser = () => (dispatch) => {
   };
   axios
     .get(`${ROOT_URL}/users/${id}`, config)
-    .then((response) => {
+    .then(response => {
       // console.log(`getUser response.data.keys: ${Object.keys(response.data)}
       //     isArray ${Array.isArray(response.data)} `);
       // console.log(`getUser username ${response.data[0].username}`);
@@ -109,14 +107,13 @@ export const getUser = () => (dispatch) => {
         payload: response.data,
       });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(`getUser failed ${err}`);
       dispatch(authError('Failed to fetch users'));
     });
 };
 
-
-export const updateUser = (user, history) => (dispatch) => {
+export const updateUser = (user, history) => dispatch => {
   console.log(`in "updateUser" for phoneNumber ${user.phoneNumber} email ${user.email}`);
   const token = sessionStorage.getItem('token');
   const id = sessionStorage.getItem('id');
@@ -143,13 +140,13 @@ export const updateUser = (user, history) => (dispatch) => {
       // window.location = '/events';
       history.push('/events');
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(`"updateUser" ${err}`);
       dispatch(authError('Failed to update user'));
     });
 };
 
-export const getUsers = () => (dispatch) => {
+export const getUsers = () => dispatch => {
   const token = sessionStorage.getItem('token');
   const config = {
     headers: {
@@ -158,13 +155,13 @@ export const getUsers = () => (dispatch) => {
   };
   axios
     .get(`${ROOT_URL}/restricted/users`, config)
-    .then((response) => {
+    .then(response => {
       dispatch({
         type: GET_USERS,
         payload: response.data,
       });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       dispatch(authError('Failed to fetch users'));
     });

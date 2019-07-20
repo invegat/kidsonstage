@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 
 import RequireAuth from './components/HOC/RequireAuth';
 import WithTracker from './components/HOC/withTracker';
@@ -17,10 +17,14 @@ import EventsNew from './components/EventsNew';
 // import RfEvents from './components/RfEvents';
 import EventDetail from './components/EventDetail';
 import Billing from './components/stripe';
+import Sample from './components/sample';
+import LoadIcons from './loadIcons';
 
 import './App.css';
 
 /* eslint-disable react/jsx-max-props-per-line, no-console */
+
+LoadIcons();
 
 class App extends Component {
   static reload(from) {
@@ -29,13 +33,18 @@ class App extends Component {
       // console.log(`REACT_APP_ReloadTimeOuts: ${process.env.REACT_APP_ReloadTimeOuts}`);
       const timeout = Number(process.env.REACT_APP_ReloadTimeOuts || '2200');
       sessionStorage.setItem('loading', true);
-      setTimeout((t) => {
-        console.log(`${from} reloading ${t}!`);
-        document.location.reload(false);
-        sessionStorage.setItem('loading', false);
-      }, timeout, timeout);
+      setTimeout(
+        t => {
+          console.log(`${from} reloading ${t}!`);
+          document.location.reload(false);
+          sessionStorage.setItem('loading', false);
+        },
+        timeout,
+        timeout
+      );
     }
   }
+
   static checkAuth() {
     const token = sessionStorage.getItem('token');
     const id = sessionStorage.getItem('id');
@@ -46,6 +55,7 @@ class App extends Component {
     }
     return true;
   }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -56,63 +66,64 @@ class App extends Component {
 
   componentDidMount() {
     fetch('/')
-      .then((response) => {
+      .then(response => {
         if (!response.ok) {
           throw new Error(`status ${response.status}`);
         }
         return response.json();
       })
-      .then((json) => {
+      .then(json => {
         this.setState({
           message: json.message,
           fetching: false,
         });
       })
-      .catch((e) => {
+      .catch(e => {
         this.setState({
           message: `API call failed: ${e}`,
           fetching: false,
         });
       });
   }
+
   render() {
     const EventsWrapped = WithTracker(RequireAuth(Events));
     const HomeWrapped = WithTracker(Home);
     return (
-      <div className="App">
-        <NavBar auth={App.checkAuth()} />
-        <div className="App--Body">
-          {/* <div className="sideNavBar--Container">SideNavBar</div> */}
-          <div>
-            <Route
-              exact path="/"
-              render={props => <HomeWrapped {...props} checkAuth={App.checkAuth} />}
-            />
-            <Route path="/signin" component={WithTracker(SignIn)} />
-            <Route path="/users" component={WithTracker(RequireAuth(Users))} />
-            <Route path="/signout" component={WithTracker(RequireAuth(SignOut))} />
-            <Route path="/signup" component={WithTracker(Register)} />
-            <Route path="/settings" component={WithTracker(RequireAuth(Settings))} />
-            <Route
-              exact path="/events"
-              render={props => <EventsWrapped {...props} testArg="x" reload={App.reload} />}
-            />
-            {/* <Route path="/rfevents" component={withTracker(RequireAuth(RfEvents))} /> */}
-            <Route
-              exact path="/events/new"
-              component={WithTracker(RequireAuth(EventsNew))}
-            />
-            <Route
-              exact path="/events/details"
-              component={WithTracker(RequireAuth(EventDetail))}
-            />
-            <Route
-              exact path="/events/purchase"
-              component={WithTracker(RequireAuth(Billing))}
-            />
+      <Router>
+        <div className="App">
+          <NavBar auth={App.checkAuth()} />
+          <div className="App--Body">
+            {/* <div className="sideNavBar--Container">SideNavBar</div> */}
+            <div>
+              <Route
+                exact
+                path="/"
+                render={props => <HomeWrapped {...props} checkAuth={App.checkAuth} />}
+              />
+              <Route path="/signin" component={WithTracker(SignIn)} />
+              <Route path="/users" component={WithTracker(RequireAuth(Users))} />
+              <Route path="/signout" component={WithTracker(RequireAuth(SignOut))} />
+              <Route path="/signup" component={WithTracker(Register)} />
+              <Route path="/settings" component={WithTracker(RequireAuth(Settings))} />
+              <Route
+                exact
+                path="/events"
+                render={props => <EventsWrapped {...props} testArg="x" reload={App.reload} />}
+              />
+              {/* <Route path="/rfevents" component={withTracker(RequireAuth(RfEvents))} /> */}
+              <Route exact path="/events/new" component={WithTracker(RequireAuth(EventsNew))} />
+              <Route
+                exact
+                path="/events/details"
+                component={WithTracker(RequireAuth(EventDetail))}
+              />
+              <Route exact path="/events/purchase" component={WithTracker(RequireAuth(Billing))} />
+              <Route exact path="/sample" component={WithTracker(Sample)} />
+            </div>
           </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }

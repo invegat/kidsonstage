@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { BrowserRouter, Route } from 'react-router-dom';
@@ -27,8 +28,7 @@ class Events extends Component {
     events: PropTypes.arrayOf(PropTypes.object).isRequired,
     invitedEvents: PropTypes.arrayOf(PropTypes.object).isRequired,
     reload: PropTypes.func.isRequired,
-  }
-
+  };
 
   componentDidMount() {
     // const events =p
@@ -58,7 +58,8 @@ class Events extends Component {
           id={event.id}
           owner={event.owner}
           reload={this.props.reload}
-        />);
+        />
+      );
     });
     const InvitedEventCards = this.props.invitedEvents.map((event /* , i */) => {
       console.log(`invited event: ${event.title}`);
@@ -71,7 +72,8 @@ class Events extends Component {
           id={event.id}
           owner={event.owner}
           reload={this.props.reload}
-        />);
+        />
+      );
     });
     return (
       <div className="wrapper">
@@ -86,4 +88,7 @@ class Events extends Component {
   }
 }
 
-export default connect(mapStateToProps, { getEvents })(Events);
+export default connect(
+  mapStateToProps,
+  { getEvents }
+)(Events);

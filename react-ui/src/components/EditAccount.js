@@ -1,39 +1,35 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
 import { Navbar, NavbarBrand } from 'mdbreact';
 
-import { TextField } from 'material-ui';
+// import { TextField } from "material-ui";
+import { TextField } from '@material-ui/core';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import {
-  faKey,
-  faAt,
-  faPhone,
-} from '@fortawesome/fontawesome-free-solid';
+
+import { faKey, faAt, faPhone } from '@fortawesome/free-solid-svg-icons';
 
 import './css/userSettings.css';
 import { updateUser, getUser } from '../actions';
 import normalizePhone from './normalizers/normalizePhone';
 
-const renderTextField = ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
+const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
   <TextField
-    floatingLabelText={label}
-    floatingLabelFocusStyle={{
-      color: 'black',
-    }}
-    underlineFocusStyle={{
-      borderColor: 'white',
-    }}
-    underlineStyle={{
-      borderColor: 'grey',
-    }}
-    errorText={touched && error}
+    label={label}
+    // floatingLabelFocusStyle={{
+    //   color: 'black',
+    // }}
+    // underlineFocusStyle={{
+    //   borderColor: 'white',
+    // }}
+    // underlineStyle={{
+    //   borderColor: 'grey',
+    // }}
+    error={touched && error}
     {...input}
     {...custom}
     style={{
@@ -52,16 +48,10 @@ class Settings extends Component {
     // };
     this.props.load();
   }
-  handleFormSubmit = ({
-    email,
-    phoneNumber,
-    updateP,
-    updateNP,
-    byPhone,
-    byEmail,
-  }) => {
-    const p = (updateP && updateP.trim().length > 0);
-    const np = (updateNP && updateNP.trim().length > 0);
+
+  handleFormSubmit = ({ email, phoneNumber, updateP, updateNP, byPhone, byEmail }) => {
+    const p = updateP && updateP.trim().length > 0;
+    const np = updateNP && updateNP.trim().length > 0;
     let P = updateP;
     let nP = updateNP;
     if (!p && !np) {
@@ -77,7 +67,7 @@ class Settings extends Component {
         byPhone,
         byEmail,
       },
-      this.props.history,
+      this.props.history
     );
   };
 
@@ -99,24 +89,19 @@ class Settings extends Component {
     // console.log(`initialValues: ${this.props.initialValues.username}`);
 
     const email = value =>
-      (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+      value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
         ? 'Invalid email address'
-        : undefined);
+        : undefined;
     const aol = value =>
-      (value && /.+@aol\.com/.test(value)
-        ? 'Really? You still use AOL for your email?'
-        : undefined);
+      value && /.+@aol\.com/.test(value) ? 'Really? You still use AOL for your email?' : undefined;
     return (
       <div className="userSettings--container">
         <div className="userSettings--form_container">
-          <Navbar className="userSettings--box_navbar" dark>
+          <Navbar className="userSettings--box_navbar" dark expand="md">
             <NavbarBrand tag="span">Account Settings</NavbarBrand>
           </Navbar>
 
-          <form
-            onSubmit={handleSubmit(this.handleFormSubmit)}
-            id="new-user-form"
-          >
+          <form onSubmit={handleSubmit(this.handleFormSubmit)} id="new-user-form">
             {/* <div className="flex-center-div">
           <label className="new-user-label">Username:</label>
           <Field
@@ -141,7 +126,8 @@ class Settings extends Component {
               />
             </div>
             <div className="flex-center-div">
-              <FontAwesomeIcon icon={faPhone} />{' '}
+              <FontAwesomeIcon icon={faPhone} />
+{' '}
               <Field
                 name="phoneNumber"
                 className="new-user-inputText"
@@ -153,7 +139,8 @@ class Settings extends Component {
               />
             </div>
             <div className="flex-center-div">
-              <FontAwesomeIcon icon={faKey} />{' '}
+              <FontAwesomeIcon icon={faKey} />
+{' '}
               <Field
                 name="updateP"
                 component={renderTextField}
@@ -163,7 +150,8 @@ class Settings extends Component {
               />
             </div>
             <div className="flex-center-div">
-              <FontAwesomeIcon icon={faKey} />{' '}
+              <FontAwesomeIcon icon={faKey} />
+{' '}
               <Field
                 name="updateNP"
                 component={renderTextField}
@@ -197,17 +185,10 @@ class Settings extends Component {
             </div>
 
             <div className="userSettings--form_buttons">
-              <button
-                type="submit"
-                disabled={pristine || submitting}
-              >
+              <button type="submit" disabled={pristine || submitting}>
                 Save
               </button>
-              <button
-                type="button"
-                disabled={pristine || submitting}
-                onClick={reset}
-              >
+              <button type="button" disabled={pristine || submitting} onClick={reset}>
                 Clear Values
               </button>
             </div>
@@ -241,7 +222,7 @@ Settings = connect(
   state => ({
     initialValues: state.users[0],
   }),
-  { load: getUser, updateUser }, // bind account loading action creator
+  { load: getUser, updateUser } // bind account loading action creator
 )(Settings);
 
 export default Settings;

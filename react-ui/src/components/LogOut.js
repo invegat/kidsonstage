@@ -15,12 +15,11 @@ class SignOut extends Component {
     return (
       <div className="logout--container">
         <div className="logout--form_container">
-          <Navbar className="logout--box_navbar" dark>
+          <Navbar className="logout--box_navbar" dark expand="md">
             <NavbarBrand tag="span">Log Out</NavbarBrand>
           </Navbar>
           <div className="logout--text_container">
-            You have successfully logged out. You will be redirected to the home
-            page!
+            You have successfully logged out. You will be redirected to the home page!
           </div>
         </div>
       </div>
@@ -28,4 +27,7 @@ class SignOut extends Component {
   }
 }
 
-export default connect(null, { logout })(SignOut);
+export default connect(
+  null,
+  { logout }
+)(SignOut);

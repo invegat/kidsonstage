@@ -1,3 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { Field, reduxForm, initialize } from 'redux-form';
 import { connect } from 'react-redux';
@@ -6,8 +9,7 @@ import { Navbar, NavbarBrand } from 'mdbreact';
 import PropTypes from 'prop-types';
 // import TextField from 'material-ui/TextField';
 
-
-import { TextField } from 'material-ui';
+import { TextField } from '@material-ui/core';
 import Billing from './stripe';
 import { getEvent, getGroups, getPartGroups, getUser, clearStripeError } from '../actions';
 import RenderGroups from './EventDetailGroups';
@@ -16,30 +18,8 @@ import normalizeDate from './normalizers/normalizeDate';
 
 /* eslint-disable react/forbid-prop-types */
 
-const renderTextField = ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-  <TextField
-    floatingLabelText={label}
-    floatingLabelFocusStyle={{
-      color: 'black',
-    }}
-    underlineFocusStyle={{
-      borderColor: 'white',
-    }}
-    underlineStyle={{
-      borderColor: 'grey',
-    }}
-    errorText={touched && error}
-    {...input}
-    {...custom}
-    style={{
-      color: 'red',
-    }}
-  />
+const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
+  <TextField hint={label} label={label} error={touched && error} {...input} {...custom} />
 );
 renderTextField.defaultProps = {
   meta: { touched: PropTypes.bool, error: PropTypes.string },
@@ -75,7 +55,7 @@ renderTextField.propTypes = {
       tbl.boolean('completed').notNullable().defaultTo(false);
     });
 */
-const nomalizeEventDate = (event) => {
+const nomalizeEventDate = event => {
   if (event && event.eventDate) {
     const newDate = normalizeDate(event.eventDate);
     // console.log(`eventDate: ${event.eventDate} newDate: ${newDate}`);
@@ -100,8 +80,9 @@ class EventsForm extends React.Component {
     this.props.setUser(); // restore global state user after reset
     this.props.clearStripeError();
   }
+
   componentWillMount() {
-  //   clearInterval(this.timerID);
+    //   clearInterval(this.timerID);
 
     const { eventId } = this.state;
     // console.log(`EventsForm componentDidMount eventId ${eventId} admin ${admin}`);
@@ -109,6 +90,7 @@ class EventsForm extends React.Component {
     this.props.setGroups(eventId);
     this.props.setPart(eventId);
   }
+
   // componentDidUpdate() {
   //   console.log(`componentDidUpdate props error: ${this.props.error}
   //   state error ${this.state.error}`);
@@ -143,75 +125,73 @@ class EventsForm extends React.Component {
     // console.log(`showEventId ${JSON.stringify(process.env, null, 2)}`);
     // const { load } = this.props;
     const { eventId, admin } = this.state;
-    const loading = (sessionStorage.getItem('loading') === 'true');
+    const loading = sessionStorage.getItem('loading') === 'true';
 
     // if (eventId > 0) this.props.load(eventId);
     // console.log(`event ${JSON.stringify(event)}`);
     return (
       <div className="eventDetail--container">
-        {loading &&
-          <div>Loading...</div>
-          }
+        {loading && <div>Loading...</div>}
         <div className="eventDetail--form_container">
-          <Navbar className="eventDetail--box_navbar" dark>
+          <Navbar className="eventDetail--box_navbar" dark expand="md">
             <NavbarBrand tag="span">Event Info</NavbarBrand>
           </Navbar>
-          {process.env.REACT_APP_ShowEventId === 'true' &&
+          {process.env.REACT_APP_ShowEventId === 'true' && (
             <div>
               <Field
                 name="event.id"
                 type="number"
                 component={renderTextField}
                 placeholder="id"
-                readOnly="true"
+                readOnly
               />
               <Field
                 name="event.activated"
                 type="bool"
                 component={renderTextField}
                 placeholder="activated"
-                readOnly="true"
+                readOnly
               />
             </div>
-          }
+          )}
           <div className="eventDetail--box_content">
-              Event Name:{'  '}
+            Event Name:{'  '}
             <Field
               name="event.title"
               type="text"
               component={renderTextField}
               placeholder="title"
-              readOnly="true"
+              readOnly
               className="primary-data"
             />
             <br />
-              Event Date:{'  '}
+            Event Date:{'  '}
             <Field
               name="event.formattedDate"
               type="text"
               component={renderTextField}
               placeholder="Event Date"
-              readOnly="true"
+              readOnly
               className="primary-data"
             />
           </div>
         </div>
-        {!loading &&
-        <div className="eventDetail--form_container">
-          <Navbar className="eventDetail--box_navbar" dark>
-            <NavbarBrand tag="span">Group Info</NavbarBrand>
-          </Navbar>
-          <RenderGroups
-            activated={this.props.initialValues.event.activated}
-            eventId={eventId}
-            admin={admin}
-            history={this.props.history}
-          />
-        </div>
-        }
+        {!loading && (
+          <div className="eventDetail--form_container">
+            <Navbar className="eventDetail--box_navbar" dark expand="md">
+              <NavbarBrand tag="span">Group Info</NavbarBrand>
+            </Navbar>
+            <RenderGroups
+              activated={this.props.initialValues.event.activated}
+              eventId={eventId}
+              admin={admin}
+              history={this.props.history}
+            />
+          </div>
+        )}
         {admin > 0 && (
           <div className="eventDetail--form_container">
-            <Navbar className="eventDetail--box_navbar" dark>
+            <Navbar className="eventDetail--box_navbar" dark expand="md">
               <NavbarBrand tag="span">Event Status</NavbarBrand>
             </Navbar>
             <br />
@@ -219,7 +199,9 @@ class EventsForm extends React.Component {
               {/* Display stripe payment box if event isn't activated */}
 
               {this.props.initialValues.event.activated === true ? (
-                <div className="eventDetail--activated">ACTIVATED Invite Code {this.props.initialValues.event.inviteCode}</div>
+                <div className="eventDetail--activated">
+                  ACTIVATED Invite Code {this.props.initialValues.event.inviteCode}
+                </div>
               ) : (
                 <Billing eventId={eventId} />
               )}
@@ -232,7 +214,6 @@ class EventsForm extends React.Component {
   }
 }
 
-
 // EventsForm.propTypes = {
 //   // loadEvent: PropTypes.func.isRequired,
 // };
@@ -244,32 +225,36 @@ const EventDetail = reduxForm({
   keepDirty: true,
 })(EventsForm);
 // export default EventDetail;
-const fiveLenthDate = (groups, partGroups) => groups.map((group) => {
-  const userId = Number(sessionStorage.getItem('id'));
-  const partIndex = partGroups.findIndex(partGroup =>
-    (partGroup.groupId === group.id) &&
-        (partGroup.userId === userId));
+const fiveLenthDate = (groups, partGroups) =>
+  groups.map(group => {
+    const userId = Number(sessionStorage.getItem('id'));
+    const partIndex = partGroups.findIndex(
+      partGroup => partGroup.groupId === group.id && partGroup.userId === userId
+    );
 
-  const partGroup = (partIndex >= 0 ? partGroups[partIndex] : undefined);
+    const partGroup = partIndex >= 0 ? partGroups[partIndex] : undefined;
 
-  // this.setState({
-  //   group: { ...group, partGroup },
-  // });
-  const checked = (partIndex >= 0);
-  const { time, ...rest } = group;
-  // if (checked) {
-  //   console.log(`partIndex: ${partIndex} partGroups.length: ${state.partGroups.length}
-  //     partGroup.groupId ${partGroup ? partGroup.groupId : null} group.id ${group.id}
-  //     group.name |${group.name}| checked ${checked} `);
-  // }
-  //  else {
-  //   console.log(`group ${group.id} |${group.name}| is unchecked`);
-  // }
-  // rest.time = time.substring(0, 5);
-  return {
-    ...rest, time: time.substring(0, 5), checked, partGroup,
-  };
-});
+    // this.setState({
+    //   group: { ...group, partGroup },
+    // });
+    const checked = partIndex >= 0;
+    const { time, ...rest } = group;
+    // if (checked) {
+    //   console.log(`partIndex: ${partIndex} partGroups.length: ${state.partGroups.length}
+    //     partGroup.groupId ${partGroup ? partGroup.groupId : null} group.id ${group.id}
+    //     group.name |${group.name}| checked ${checked} `);
+    // }
+    //  else {
+    //   console.log(`group ${group.id} |${group.name}| is unchecked`);
+    // }
+    // rest.time = time.substring(0, 5);
+    return {
+      ...rest,
+      time: time.substring(0, 5),
+      checked,
+      partGroup,
+    };
+  });
 export default connect(
   state => ({
     initialValues: { event: nomalizeEventDate(state.event) },
@@ -285,9 +270,8 @@ export default connect(
     setPart: eventId => dispatch(getPartGroups(eventId)),
     setUser: () => dispatch(getUser()),
     clearStripeError: () => dispatch(clearStripeError()),
-    changeFieldValues: (formName, data) =>
-      dispatch(initialize(formName, data)),
-  }),
+    changeFieldValues: (formName, data) => dispatch(initialize(formName, data)),
+  })
 )(EventDetail);
 // export default connect(state => ({
 //   initialValues: { event: state.event },

@@ -1,52 +1,31 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable jsx-a11y/label-has-for, react/prop-types, object-curly-newline, no-console */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
-
 // const { DOM: { input /* select, textarea */ } } = React;
 
-import { TextField /* , Checkbox */ } from 'material-ui';
+import { TextField /* , Checkbox */ } from '@material-ui/core';
 
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+
 import {
   // faArrowRight,
   faUser,
   faKey,
   faAt,
   faPhone,
-} from '@fortawesome/fontawesome-free-solid';
+} from '@fortawesome/free-solid-svg-icons';
 
 import { Navbar, NavbarBrand } from 'mdbreact';
 
 import normalizePhone from './normalizers/normalizePhone';
-import { register } from '../actions';
+import { register as register_ } from '../actions';
 import './css/register.css';
 
-const renderTextField = ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-  <TextField
-    floatingLabelText={label}
-    floatingLabelFocusStyle={{
-      color: 'black',
-    }}
-    underlineFocusStyle={{
-      borderColor: 'white',
-    }}
-    underlineStyle={{
-      borderColor: 'grey',
-    }}
-    errorText={touched && error}
-    {...input}
-    {...custom}
-    style={{
-      color: 'red',
-    }}
-  />
+const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
+  <TextField hint={label} label={label} error={touched && error} {...input} {...custom} />
 );
 
 class Register extends Component {
@@ -61,7 +40,8 @@ class Register extends Component {
     ...extraProps
   }) => {
     console.log(`byPhone: ${byPhone}  byEmail: ${byEmail} ${JSON.stringify(extraProps, null, 2)}`);
-    this.props.register(
+    const { register, history } = this.props;
+    register(
       {
         username,
         email,
@@ -71,14 +51,16 @@ class Register extends Component {
         byPhone,
         byEmail,
       },
-      this.props.history,
+      history
     );
   };
 
   renderAlert = () => {
-    if (!this.props.error) return null;
-    return <h3>{this.props.error}</h3>;
+    const { error } = this.props;
+    if (!error) return null;
+    return <h3>{error}</h3>;
   };
+
   render() {
     const { handleSubmit, pristine, reset, submitting } = this.props;
     // const renderField = ({
@@ -98,28 +80,24 @@ class Register extends Component {
     //   </div>
     // );
     const email = value =>
-      (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
+      value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
         ? 'Invalid email address'
-        : undefined);
+        : undefined;
 
     const aol = value =>
-      (value && /.+@aol\.com/.test(value)
-        ? 'Really? You still use AOL for your email?'
-        : undefined);
+      value && /.+@aol\.com/.test(value) ? 'Really? You still use AOL for your email?' : undefined;
     return (
       <div className="register--container">
         <div className="register--form_container">
-          <Navbar className="register--box_navbar" dark>
+          <Navbar className="register--box_navbar" dark expand="md">
             <NavbarBrand tag="span">Sign Up</NavbarBrand>
           </Navbar>
 
           <div className="register--form">
-            <form
-              onSubmit={handleSubmit(this.handleFormSubmit)}
-              id="submit-button"
-            >
+            <form onSubmit={handleSubmit(this.handleFormSubmit)} id="submit-button">
               <fieldset>
-                <FontAwesomeIcon icon={faUser} /> <Field
+                <FontAwesomeIcon icon={faUser} />{' '}
+                <Field
                   className="register--form_field"
                   name="username"
                   component={renderTextField}
@@ -128,7 +106,8 @@ class Register extends Component {
                 />
               </fieldset>
               <fieldset>
-                <FontAwesomeIcon icon={faAt} /> <Field
+                <FontAwesomeIcon icon={faAt} />{' '}
+                <Field
                   className="register--form_field"
                   name="email"
                   component={renderTextField}
@@ -138,7 +117,8 @@ class Register extends Component {
                 />
               </fieldset>
               <fieldset>
-                <FontAwesomeIcon icon={faPhone} /> <Field
+                <FontAwesomeIcon icon={faPhone} />{' '}
+                <Field
                   className="register--form_field"
                   name="phoneNumber"
                   component={renderTextField}
@@ -148,7 +128,8 @@ class Register extends Component {
                 />
               </fieldset>
               <fieldset>
-                <FontAwesomeIcon icon={faKey} /> <Field
+                <FontAwesomeIcon icon={faKey} />{' '}
+                <Field
                   className="register--form_field"
                   name="password"
                   component={renderTextField}
@@ -157,7 +138,8 @@ class Register extends Component {
                 />
               </fieldset>
               <fieldset>
-                <FontAwesomeIcon icon={faKey} /> <Field
+                <FontAwesomeIcon icon={faKey} />{' '}
+                <Field
                   className="register--form_field"
                   name="confirmPassword"
                   component={renderTextField}
@@ -192,11 +174,7 @@ class Register extends Component {
                 <button type="submit" disabled={pristine || submitting}>
                   Sign Up
                 </button>
-                <button
-                  type="button"
-                  disabled={pristine || submitting}
-                  onClick={reset}
-                >
+                <button type="button" disabled={pristine || submitting} onClick={reset}>
                   Reset
                 </button>
               </div>
@@ -211,17 +189,17 @@ class Register extends Component {
 const mapStateToProps = state => ({
   error: state.auth.error,
 });
+const mapDispatchToProps = dispatch => ({
+  register: (o, h) => dispatch(register_(o, h)),
+});
 
 export default reduxForm({
   form: 'newUser',
   touchOnBlur: true,
-  fields: [
-    'username',
-    'email',
-    'phoneNumber',
-    'password',
-    'confirmPassword',
-    'byPhone',
-    'byEmail',
-  ],
-})(connect(mapStateToProps, { register })(Register));
+  fields: ['username', 'email', 'phoneNumber', 'password', 'confirmPassword', 'byPhone', 'byEmail'],
+})(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Register)
+);

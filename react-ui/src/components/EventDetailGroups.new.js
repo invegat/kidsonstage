@@ -1,11 +1,10 @@
-/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { /* Field, */ reduxForm, FieldArray, initialize } from 'redux-form';
 import { connect } from 'react-redux';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { faUndoAlt } from '@fortawesome/fontawesome-free-solid';
+
+import { faUndoAlt } from '@fortawesome/free-solid-svg-icons';
 import { getGroups, getPartGroups } from '../actions';
 import EventDetailGroupRow from './EventDetailGroupRow';
 import NormalizeTime from './normalizers/normalizeTime';
@@ -37,65 +36,92 @@ class RenderGroups extends React.Component {
   add = (i, v) => {
     if (this.bools[i] !== v) {
       this.bools[i] = v;
+      const { addIndex } = this.state;
       this.setState({
-        addIndex: this.state.addIndex - 1,
+        addIndex: addIndex - 1,
       });
     }
   };
 
+  renderEventRows = ({ fields, activated, props, eventId, admin, groupFA, addIndex, error }) => (
+    <div>
+      <ul>
+        {fields.map((group, index) => (
+          <li key={`${group}.row`}>
+            {activated !== undefined && (
+              <EventDetailGroupRow
+                rowProps={props}
+                eventId={eventId}
+                admin={admin}
+                fields={fields}
+                groupText={group}
+                index={index}
+                group={groupFA[index]}
+                activated={activated}
+                isValid={this.add}
+              />
+            )}
+          </li>
+        ))}
+        {admin > 0 && (
+          <li
+            key={
+              Math.random()
+                .toString(36)
+                .substring(2) + Date.now().toString(36)
+            }
+          >
+            <button
+              className="eventDetail--form_container_button"
+              id="addGroupButton"
+              type="button"
+              disabled={!this.valid}
+              style={{ opacity: this.valid ? '1' : '0.5' }}
+              onClick={() => {
+                sessionStorage.setItem('pushingNewGroup', 1);
+                fields.push();
+              }}
+            >
+              Add Group why 2?
+            </button>
+          </li>
+        )}
+        {error && (
+          <li key={-1} className="error">
+            {error}
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+
   render() {
+    // console.log(`render 92 this.props: ${JSON.stringify(this.props, null, 2)}`);
+    // eslint-disable-next-line react/destructuring-assignment
+    console.log(`render 95 this.props.error ${this.props.error}`);
     const {
       activated,
       groupFA,
-      /* load, loadPart, */ fields,
       eventId,
       admin,
       props,
-      meta: { error },
+      // meta: { error },
+      error,
     } = this.props;
+    const { addIndex } = this.state;
     return (
       <div>
-        <ul>
-          {fields.map((group, index) => (
-            <li key={`${group}.row`}>
-              {activated !== undefined && (
-                <EventDetailGroupRow
-                  rowProps={props}
-                  eventId={eventId}
-                  admin={admin}
-                  fields={fields}
-                  groupText={group}
-                  index={index}
-                  group={groupFA[index]}
-                  activated={activated}
-                  isValid={this.add}
-                />
-              )}
-            </li>
-          ))}
-          {admin > 0 && (
-            <li key={this.state.addIndex}>
-              <button
-                className="eventDetail--form_container_button"
-                id="addGroupButton"
-                type="button"
-                disabled={!this.valid}
-                style={{ opacity: this.valid ? '1' : '0.5' }}
-                onClick={() => {
-                  sessionStorage.setItem('pushingNewGroup', 1);
-                  fields.push();
-                }}
-              >
-                Add Group
-              </button>
-            </li>
-          )}
-          {error && (
-            <li key={-1} className="error">
-              {error}
-            </li>
-          )}
-        </ul>
+        <FieldArray
+          name="groupFA"
+          activated={activated}
+          groupFA={groupFA}
+          eventId={eventId}
+          admin={admin}
+          props={props}
+          error={error}
+          addIndex={addIndex}
+          component={this.renderEventRows}
+        />
       </div>
     );
   }
@@ -107,24 +133,27 @@ const onKeyPress = event => {
     event.preventDefault();
   }
 };
+let EventDetailsGroupsCalls = 0;
 const EventDetailsGroups = props => {
   // console.log(`Event Detail Group history? ${props.history}`);
-  const { load, history, activated } = props;
-
-  const eventId = props.eventId || 2;
+  const { load, history, activated, eventId, admin, invalid } = props;
+  console.log(`EventDetailsGroups times ${EventDetailsGroupsCalls}`);
+  EventDetailsGroupsCalls += 1;
   // console.log(`Groups load type ${typeof load}`);
   // console.log(`Groups getGroups type ${typeof getGroups}`);
   return (
     <form onKeyPress={onKeyPress}>
-      <FieldArray
+      <RenderGroups
         name="groupFA"
         component={RenderGroups}
-        eventId={eventId}
-        admin={props.admin}
+        eventId={eventId || 2}
+        admin={admin}
         load={load}
         props={props}
         activated={activated}
+        // eslint-disable-next-line react/destructuring-assignment
         groupFA={props.initialValues.groupFA}
+        error={!invalid}
       />
       <div className="eventDetail--return_button_container">
         <button
@@ -133,7 +162,7 @@ const EventDetailsGroups = props => {
           onKeyPress={onKeyPress}
           onClick={() => history.push('/events')}
         >
-          Return to Events {' '}<FontAwesomeIcon icon={faUndoAlt} />
+          Return to Events <FontAwesomeIcon icon={faUndoAlt} />
         </button>
       </div>
     </form>

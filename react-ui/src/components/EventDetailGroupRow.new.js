@@ -1,12 +1,12 @@
-/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
-import { TextField } from 'material-ui';
+import { TextField } from '@material-ui/core';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit, faFlagCheckered } from '@fortawesome/fontawesome-free-solid';
+
+import { faTrash, faEdit, faFlagCheckered } from '@fortawesome/free-solid-svg-icons';
 import formatTime from './normalizers/normalizeTime';
 
 // import completedBI from './graphics/completed.png';
@@ -26,9 +26,30 @@ import AxiosPromise from './axiosPromise';
 import './css/eventDetail.css';
 /* eslint-disable react/forbid-prop-types, no-console, no-nested-ternary,
     jsx-a11y/no-static-element-interactions */
+// const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
+//   <TextField
+//     floatingLabelText={label}
+//     floatingLabelFocusStyle={{
+//       color: 'black',
+//     }}
+//     underlineFocusStyle={{
+//       borderColor: 'white',
+//     }}
+//     underlineStyle={{
+//       borderColor: 'grey',
+//     }}
+//     errorText={touched && error}
+//     {...input}
+//     {...custom}
+//     style={{
+//       color: 'red',
+//     }}
+//   />
+// );
 const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
   <TextField hint={label} label={label} error={touched && error} {...input} {...custom} />
 );
+
 renderTextField.defaultProps = {
   meta: { touched: PropTypes.bool, error: PropTypes.string },
   label: '',
@@ -41,9 +62,8 @@ renderTextField.propTypes = {
 
 const renderTextFieldTime = ({ input, label, meta: { touched, error }, ...custom }) => (
   <TextField
-    hint={label}
     label={label}
-    {...custom}
+    hint={label}
     error={touched && error}
     {...input}
     {...custom}
@@ -113,26 +133,33 @@ class EventDetailGroupRow extends Component {
         if (err || result.data.length === 0) {
           console.log(`detail row constructor partGroup not found or empty for
           ${this.state.group.id} ${this.state.group.name}`);
-          this.setState({
-            checked: false,
-            loaded: true,
-            group: {
-              ...this.state.group,
-              time: formatTime(this.state.group.time, this.state.group.time),
-            },
+          this.setState(prevState => {
+            return {
+              checked: false,
+              loaded: true,
+              group: {
+                ...prevState.group,
+                time: formatTime(prevState.group.time, prevState.group.time),
+              },
+            };
           });
         } else {
           // console.log(`checked ${this.state.checked}
           //     detail row constructor partGroup result for group
           //     ${this.state.group.id} ${this.state.group.name}
           //     ${JSON.stringify(result.data[0], null, 2)}`);
-          this.setState({
-            checked: result.data[0].subscribed,
-            loaded: true,
-            group: {
-              ...this.state.group,
-              time: formatTime(this.state.group.time, this.state.group.time),
-            },
+          // this.setState((prevState, props) => {
+          //   return {counter: prevState.counter + props.step};
+          // })
+          this.setState(prevState => {
+            return {
+              checked: result.data[0].subscribed,
+              loaded: true,
+              group: {
+                ...prevState.group,
+                time: formatTime(prevState.group.time, prevState.group.time),
+              },
+            };
           });
         }
       });
@@ -204,12 +231,11 @@ class EventDetailGroupRow extends Component {
           onBlur={event => {
             const newName = event.target.value;
             if (this.state.group.name !== newName) {
-              this.setState(
-                {
-                  group: { ...this.state.group, name: newName },
-                },
-                this.sendGroup(this.state.group, edit)
-              );
+              this.setState(prevState => {
+                return {
+                  group: { ...prevState.group, name: newName },
+                };
+              }, this.sendGroup(this.state.group, edit));
             }
           }}
         />
@@ -281,42 +307,53 @@ class EventDetailGroupRow extends Component {
             ) {
               // console.log(`time: |${group.time}| newTime |${newTime}|
               // isEqual ${group.time == newTime}`);
-              this.setState(
-                {
-                  group: { ...this.state.group, time: `${formatTime(newTime, currentTime)}`, pm },
-                },
-                () => {
-                  console.log(
-                    `this.state.group.time: ${this.state.group.time} pm: ${this.state.group.pm}`
-                  );
-                  // convert am/pm to military
-                  if (this.state.group.pm && hour < 12) hour += 12;
-                  if (am && hour === 12) hour = 0;
-                  newTime = `${hour.toString().padStart(2, '0')}:${minutes
-                    .toString()
-                    .padStart(2, '0')}`;
-                  const group = Object.assign(this.state.group);
-                  group.time = `${newTime}:00`;
-                  this.sendGroup(group, edit);
-                  setTimeout(() => {
-                    document.location.reload(false);
-                  }, 100);
-                }
-              );
+              this.setState(prevState => {
+                return (
+                  {
+                    group: {
+                      ...prevState.group,
+                      time: `${formatTime(newTime, currentTime)}`,
+                      pm,
+                    },
+                  },
+                  () => {
+                    console.log(
+                      // eslint-disable-next-line react/no-access-state-in-setstate
+                      `this.state.group.time: ${this.state.group.time} pm: ${this.state.group.pm}`
+                    );
+                    // convert am/pm to military
+                    // eslint-disable-next-line react/no-access-state-in-setstate
+                    if (this.state.group.pm && hour < 12) hour += 12;
+                    if (am && hour === 12) hour = 0;
+                    newTime = `${hour.toString().padStart(2, '0')}:${minutes
+                      .toString()
+                      .padStart(2, '0')}`;
+                    // eslint-disable-next-line react/no-access-state-in-setstate
+                    const group = Object.assign(this.state.group);
+                    group.time = `${newTime}:00`;
+                    this.sendGroup(group, edit);
+                    setTimeout(() => {
+                      document.location.reload(false);
+                    }, 100);
+                  }
+                );
+              });
             } else {
               newTime = `${hour.toString().padStart(2, ' ')}:${minutes
                 .toString()
                 .padStart(2, '0')}`;
-              this.setState(
-                {
-                  group: { ...this.state.group, time: newTime, pm },
-                },
-                () => {
-                  setTimeout(() => {
-                    document.location.reload(false);
-                  }, 100);
-                }
-              );
+              this.setState(prevState => {
+                return (
+                  {
+                    group: { ...prevState.group, time: newTime, pm },
+                  },
+                  () => {
+                    setTimeout(() => {
+                      document.location.reload(false);
+                    }, 100);
+                  }
+                );
+              });
             }
           }}
         />
@@ -342,29 +379,33 @@ class EventDetailGroupRow extends Component {
               onClick={
                 (/* event */) => {
                   // const checked = event.target.value;
-                  this.setState(
-                    {
-                      checked: !this.state.checked,
-                    },
-                    () => {
-                      const url = `/events/${this.state.eventId}/groups/${this.state.group.id}`;
-                      AxiosPromise({ verb: 'get', url, idOption: 'param' }, (err, result) => {
-                        if (err || result.data.length === 0) {
-                          this.props.addPart({
-                            eventId: this.state.eventId,
-                            groupId: this.state.group.id,
-                            subscribed: this.state.checked,
-                          });
-                        } else {
-                          this.props.editPart({
-                            eventId: this.state.eventId,
-                            groupId: this.state.group.id,
-                            subscribed: this.state.checked,
-                          });
-                        }
-                      });
-                    }
-                  );
+                  this.setState(prevState => {
+                    return (
+                      {
+                        checked: !prevState.checked,
+                      },
+                      () => {
+                        const url = `/events/${prevState.eventId}/groups/${prevState.group.id}`;
+                        AxiosPromise({ verb: 'get', url, idOption: 'param' }, (err, result) => {
+                          if (err || result.data.length === 0) {
+                            this.props.addPart({
+                              eventId: prevState.eventId,
+                              groupId: prevState.group.id,
+                              // eslint-disable-next-line react/no-access-state-in-setstate
+                              subscribed: this.state.checked,
+                            });
+                          } else {
+                            this.props.editPart({
+                              eventId: prevState.eventId,
+                              groupId: prevState.group.id,
+                              // eslint-disable-next-line react/no-access-state-in-setstate
+                              subscribed: this.state.checked,
+                            });
+                          }
+                        });
+                      }
+                    );
+                  });
                 }
               }
             />
@@ -432,14 +473,17 @@ class EventDetailGroupRow extends Component {
             type="button"
             title="Edit Group"
             onClick={() => {
-              this.setState(
-                {
-                  readOnly: !this.state.readOnly,
-                },
-                () => {
-                  this.props.isValid(this.props.index, this.state.readOnly);
-                }
-              );
+              this.setState(prevState => {
+                return (
+                  {
+                    readOnly: !prevState.readOnly,
+                  },
+                  () => {
+                    // eslint-disable-next-line react/no-access-state-in-setstate
+                    this.props.isValid(this.props.index, this.state.readOnly);
+                  }
+                );
+              });
             }}
           >
             <FontAwesomeIcon icon={faEdit} />
@@ -466,7 +510,10 @@ class EventDetailGroupRow extends Component {
                   }
                 );
               } else {
-                removePart({ eventId: this.state.eventId, groupId: this.state.group.id });
+                removePart({
+                  eventId: this.state.eventId,
+                  groupId: this.state.group.id,
+                });
                 remove(this.state.group);
                 fields.remove(index);
                 document.location.reload(false);

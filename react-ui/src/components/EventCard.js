@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { connect } from 'react-redux';
@@ -12,7 +14,8 @@ import normalizeDate from './normalizers/normalizeDate';
 class EventCard extends Component {
   static defaultProps = {
     inviteCode: undefined,
-  }
+  };
+
   constructor(props) {
     super(props);
     const { id } = props;
@@ -20,12 +23,11 @@ class EventCard extends Component {
     console.log(`EventCard id ${id} activated: ${props.activated}`);
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   render() {
     // console.log(`eventCard pre-render return id ${this.state.id}`);
-    const admin = (Number(sessionStorage.getItem('id')) === this.props.owner) ? 1 : 0;
+    const admin = Number(sessionStorage.getItem('id')) === this.props.owner ? 1 : 0;
     const queryRoute = `/events/details?eventId=${this.props.id}&admin=${admin}`;
     return (
       <LinkContainer
@@ -41,20 +43,24 @@ class EventCard extends Component {
         }}
       >
         <div className="eventCard--Container">
-          {process.env.REACT_APP_ShowEventId === 'true' &&
-          <h2>eventId: {this.state.id} admin: {admin} </h2>
-          }
-          <Navbar className="eventCard--box_navbar" dark>
+          {process.env.REACT_APP_ShowEventId === 'true' && (
+            <h2>
+              eventId: {this.state.id} admin: {admin}{' '}
+            </h2>
+          )}
+          <Navbar className="eventCard--box_navbar" dark expand="md">
             <NavbarBrand tag="span">{this.props.title}</NavbarBrand>
           </Navbar>
 
           {/* <div className="eventCard--Title"></div> */}
-          <div className="eventCard--Date">{normalizeDate(this.props.eventDate)}<br />
+          <div className="eventCard--Date">
+            {normalizeDate(this.props.eventDate)}
+            <br />
             {/* Active Status: {this.props.title === true ? "TRUE" : "FALSE"} */}
           </div>
-          {this.props.inviteCode &&
-          <div className="eventCard--Invite">Event Invite Code {this.props.inviteCode}</div>
-          }
+          {this.props.inviteCode && (
+            <div className="eventCard--Invite">Event Invite Code {this.props.inviteCode}</div>
+          )}
         </div>
       </LinkContainer>
     );
@@ -82,4 +88,7 @@ const mapDispatchToProps = dispatch => ({
   setParts: id => dispatch(getPartGroups(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventCard);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EventCard);

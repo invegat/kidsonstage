@@ -107,6 +107,7 @@ display: none;
 .primary-data {
   font-weight: bold;
   font-size: 16pt;
+  top: -3px;
 }
 .error {
   font-weight: bold;

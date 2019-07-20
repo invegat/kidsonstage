@@ -6,7 +6,8 @@
     "node": "8.9.x"
   },
   "scripts": {
-    "start": "nodemon server --exec babel-node",
+    "ostart": "nodemon server --exec babel-cli",
+    "start": "nodemon --exec babel-node server/index.js",
     "heroku-postbuild": "cd react-ui/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
@@ -14,28 +15,30 @@
     "react-ui/node_modules"
   ],
   "dependencies": {
-    "@sendgrid/mail": "^6.2.1",
-    "babel-cli": "^6.26.0",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@material-ui/styles": "^4.2.0",
+    "@sendgrid/mail": "^6.4.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
-    "bcrypt": "^1.0.3",
-    "body-parser": "^1.18.2",
-    "cors": "^2.8.4",
+    "babel-preset-env": "^1.7.0",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^5.0.1",
-    "express": "^4.16.3",
-    "helmet": "^3.12.0",
-    "jwt-simple": "^0.5.1",
-    "knex": "^0.14.4",
-    "moment": "^2.22.0",
-    "morgan": "^1.9.0",
-    "nodemon": "^1.17.3",
-    "npm": "^5.8.0",
+    "express": "^4.17.1",
+    "helmet": "^3.18.0",
+    "jwt-simple": "^0.5.6",
+    "knex": "^0.14.6",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "node-gyp": "^4.0.0",
+    "nodemon": "^1.19.1",
+    "npm": "^6.10.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "pg": "^7.4.1",
-    "stripe": "^5.8.0",
-    "twilio": "^3.14.0"
+    "pg": "^7.11.0",
+    "stripe": "^5.10.0",
+    "twilio": "^3.33.1"
   },
   "keywords": [
     "node",
@@ -44,5 +47,9 @@
     "react"
   ],
   "license": "MIT",
-  "devDependencies": {}
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "tar": "^4.4.10"
+  }
 }

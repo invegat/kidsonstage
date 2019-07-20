@@ -26,6 +26,7 @@
   width: 100%;
   margin-bottom: 10px;
   height: 35px;
+  color: black;
 }
 
 .login--button {
@@ -43,3 +44,16 @@
   justify-content: center;
   box-shadow: none;
 }
+
+.textFieldColor {
+  color: black;
+  /* multilineColor: black; */
+  background: pink;
+  flood-color: black;
+}
+
+
+/* .login--box_brand{
+  margin-top: 1px;
+  color: black;
+} */
