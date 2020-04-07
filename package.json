@@ -6,9 +6,10 @@
     "node": "8.9.x"
   },
   "scripts": {
-    "xstart": "node server",
-    "ostart": "nodemon server --exec babel-cli",
-    "start": "nodemon --exec babel-node server/index.js",
+    "build": "babel server -d dist",
+    "ostart": "nodemon server --exec babel",
+    "nstart": "nodemon --exec babel-node server/index.js",
+    "start": "npm run build && nodemon dist/index.js",
     "heroku-postbuild": "cd react-ui/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
@@ -16,9 +17,6 @@
     "react-ui/node_modules"
   ],
   "dependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.7",
-    "@babel/node": "^7.8.7",
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@material-ui/styles": "^4.2.0",
     "@sendgrid/mail": "^6.4.0",
@@ -52,6 +50,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "tar": "^4.4.10"
   }
 }
