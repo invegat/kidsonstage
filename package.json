@@ -6,8 +6,9 @@
     "node": "8.9.x"
   },
   "scripts": {
-    "start": "nodemon server --exec babel-cli",
-    "nstart": "nodemon --exec babel-node server/index.js",
+    "xstart": "node server",
+    "ostart": "nodemon server --exec babel-cli",
+    "start": "nodemon --exec babel-node server/index.js",
     "heroku-postbuild": "cd react-ui/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
@@ -48,8 +49,8 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.5.0",
-    "@babel/core": "^7.5.4",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
     "tar": "^4.4.10"
   }
 }
