@@ -269,7 +269,7 @@ export const addEvent = event => dispatch => {
     dispatch(authError('Not logged in'));
     return;
   }
-  if (id !== event.owner) {
+  if (Number(id) !== event.owner) {
     console.log(`addEvent Illegal id: ${id} event.owner: ${event.owner}`);
     dispatch(authError('Illegal'));
     return;

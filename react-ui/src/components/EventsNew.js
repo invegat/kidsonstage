@@ -13,7 +13,25 @@ import { TextField } from '@material-ui/core';
 // import { FontAwesomeIcon } from "@fortawesome-svg-core/react-fontawesome";
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import { faEdit, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+
+import moment from 'moment';
+
 import { addEvent } from '../actions';
+// import normalizeDate from './normalizers/normalizeDate';
+// import DateTimePicker from 'react-widgets/lib/DateTimePicker'
+// import Moment from 'moment'
+// import momentLocalizer from 'react-widgets-moment';
+
+// Moment.locale('en')
+// momentLocalizer()
+
+// const renderDateTimePicker = ({ input: { onChange, value }, showTime }) =>
+//   <DateTimePicker
+//     onChange={onChange}
+//     format="DD MMM YYYY  HH:MM"
+//     time={showTime}
+//     value={!value ? null : new Date(value)}
+//   />
 
 const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
   <TextField hint={label} label={label} error={touched && error} {...input} {...custom} />
@@ -26,8 +44,9 @@ class EventsNew extends Component {
     eventDate,
     activated = false,
     completed = false,
-    owner = sessionStorage.getItem('id'),
+    owner = Number(sessionStorage.getItem('id')),
   }) => {
+    eventDate = new Date(eventDate.replace('th', ',')).toUTCString()
     this.props.save(
       {
         title,
@@ -58,8 +77,8 @@ class EventsNew extends Component {
                 name="eventDate"
                 type="text"
                 component={renderTextField}
-                label="Date"
-                placeholder="Date"
+                label={moment().format('MMMM Do YYYY h:mm A')}
+                placeholder="Date Time"
               />
               <br />
               <br />

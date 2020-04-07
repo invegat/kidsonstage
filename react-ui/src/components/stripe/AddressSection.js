@@ -76,7 +76,6 @@ class AddressSection extends React.Component {
           <Field name="address_city" type="text" component={renderTextField} placeholder="City" />
           <Field
             name="address_state"
-            label="State"
             type="text"
             component={renderTextField}
             placeholder="State"
