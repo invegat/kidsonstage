@@ -17,7 +17,7 @@ export const CLEAR_USERS = 'CLEAR_USERS';
 axios.defaults.withCredentials = true;
 // https://www.whenismykidonstage.com/api
 export const ROOT_URL =
-  process.env.NODE_ENV === 'production' ? '/dist/api' : 'http://localhost:5000/api';
+  process.env.NODE_ENV === 'production' ? 'dist/api' : 'http://localhost:5000/api';
 
 export const authError = error => ({
   type: AUTHENTICATION_ERROR,
