@@ -1,8 +1,8 @@
-require('dotenv').config({path: '../.env'});
+require('dotenv').config({ path: '../.env' });
 
 const DATABASE_URL = process.env.DATABASE_URL
 let d = {
-  'user' : 1,
+  'user': 1,
   'password': 2,
   'host': 3,
   'port': 4,
@@ -28,5 +28,8 @@ module.exports = {
   },
   seeds: {
     directory: './database/seeds'
-  }
+  },
+  ssl: {
+    rejectUnauthorized: false,
+  },
 };
