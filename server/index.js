@@ -43,7 +43,7 @@ server.use('/api/invites', inviteEndpoints);
 if (process.env.NODE_ENV === 'production') {
   // Priority serve any static files.
   server.use(express.static(path.resolve(__dirname, '../react-ui/build')));
-  server.get('*', function(request, response) {
+  server.get('*', function (_, response) {
     response.sendFile(
       path.resolve(__dirname, '../react-ui/build', 'index.html')
     );

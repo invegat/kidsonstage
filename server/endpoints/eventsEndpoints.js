@@ -35,10 +35,12 @@ eventsRouter.post('/', function (req, res) {
 });
 
 eventsRouter.delete('/', function (req, res) {
-  const { id } = req.body;
+  console.log('in event delete')
+  const { eventId } = req.query
+  console.log('delete eventId', eventId)
 
   db('events')
-    .where('id', id)
+    .where('id', eventId)
     .del()
     .then(function (records) {
       res.status(200).json(id);

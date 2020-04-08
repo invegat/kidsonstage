@@ -5,7 +5,9 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { connect } from 'react-redux';
 import { Navbar, NavbarBrand } from 'mdbreact';
 import PropTypes from 'prop-types';
-import { getEvent, getGroups, getPartGroups } from '../actions';
+// import Popup from "reactjs-popup";
+
+import { getEvent, getGroups, getPartGroups, deleteEvent } from '../actions';
 import './css/events.css';
 import normalizeDate from './normalizers/normalizeDate';
 
@@ -19,11 +21,24 @@ class EventCard extends Component {
   constructor(props) {
     super(props);
     const { id } = props;
-    this.state = { id };
+    this.state = { id, open: false };
     console.log(`EventCard id ${id} activated: ${props.activated}`);
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
+
+  contextMenu = (e) => {
+    e.preventDefault();
+    console.log('contextMenu', e.clientX, e.clientY);
+    this.setState({
+      open: true
+    })
+  }
+
+  deleteMenu = (e) => {
+    e.preventDefault();
+    this.props.delete(this.state.id)
+  }
 
   render() {
     // console.log(`eventCard pre-render return id ${this.state.id}`);
@@ -41,8 +56,10 @@ class EventCard extends Component {
           this.props.setParts(this.state.id);
           this.props.reload('EventCard');
         }}
+        onContextMenu={this.contextMenu}
       >
         <div className="eventCard--Container">
+
           {process.env.REACT_APP_ShowEventId === 'true' && (
             <h2>
               eventId: {this.state.id} admin: {admin}{' '}
@@ -51,6 +68,8 @@ class EventCard extends Component {
           <Navbar className="eventCard--box_navbar" dark expand="md">
             <NavbarBrand tag="span">{this.props.title}</NavbarBrand>
           </Navbar>
+
+          {this.state.open ? <button onClick={this.deleteMenu}>delete</button> : <div></div>}
 
           {/* <div className="eventCard--Title"></div> */}
           <div className="eventCard--Date">
@@ -86,6 +105,7 @@ const mapDispatchToProps = dispatch => ({
   setEvent: id => dispatch(getEvent(id, 1)),
   setGroups: id => dispatch(getGroups(id)),
   setParts: id => dispatch(getPartGroups(id)),
+  delete: id => dispatch(deleteEvent(id)),
 });
 
 export default connect(

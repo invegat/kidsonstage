@@ -332,7 +332,7 @@ export const addGroup = (eventId, group) => dispatch => {
     });
 };
 
-export const deleteEvent = event => dispatch => {
+export const deleteEvent = eventId => dispatch => {
   const token = sessionStorage.getItem('token');
   const id = sessionStorage.getItem('id');
   if (!id || !token) {
@@ -345,7 +345,9 @@ export const deleteEvent = event => dispatch => {
     },
   };
   axios
-    .delete(`${ROOT_URL}/events`, event, config)
+    .delete(`${ROOT_URL}/events/`, {
+      params: { eventId }
+    }, config)
     .then(response => {
       console.log(`delete event response ${JSON.stringify(response.data)}`);
       dispatch({
