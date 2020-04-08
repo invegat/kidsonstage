@@ -31,7 +31,7 @@ class EventCard extends Component {
     e.preventDefault();
     console.log('contextMenu', e.clientX, e.clientY);
     this.setState({
-      open: true
+      open: !this.state.open
     })
   }
 

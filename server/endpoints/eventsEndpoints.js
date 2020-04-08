@@ -43,7 +43,7 @@ eventsRouter.delete('/', function (req, res) {
     .where('id', eventId)
     .del()
     .then(function (records) {
-      res.status(200).json(id);
+      res.status(200).json(eventId);
     })
     .catch(function (err) {
       console.log('del error', err)
