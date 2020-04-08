@@ -19,7 +19,9 @@ module.exports = {
     database: a[d.database],
     host: a[d.host],
     port: a[d.port],
-    ssl: true
+    ssl: {
+      rejectUnauthorized: true,
+    },
   },
   searchPath: ['knex', 'public'],
   useNullAsDefault: true,
@@ -28,8 +30,5 @@ module.exports = {
   },
   seeds: {
     directory: './database/seeds'
-  },
-  ssl: {
-    rejectUnauthorized: false,
   },
 };
