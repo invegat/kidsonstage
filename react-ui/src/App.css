@@ -1,38 +1,33 @@
+/* COLOR SCHEME: 
+1. Text Colors: SMOKEY BLACK: #0C120C
+2. Highlight Color (such as button hover): SEA FOAM GREEN: #BBE1C3
+3. Border Colors: 
+    A. NICKEL: #6D7275
+    B. LIGHT GREY: #C7D6D5
+4. Page Background Color: ANTI-FLASH-WHITE: #ECEBF3 */
+
 .App {
-  text-align: center;
+	/* text-align: center; */
+
+	/* width: 100%; */
+
+	background-color: #607d8b;
+
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.App--Body {
+	/* border: 1px solid black; */
+	/* display: flex; */
+	background-color: #607d8b;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+/* .sideNavBar--Container {
+	border: 1px solid black;
+	width: 20%;
+	height: 400px;
+	margin: 30px;
+} */
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+html {
+	background-color: #607d8b;
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// export * from './events';
+export * from './events';
 
 export const USER_REGISTERED = 'USER_REGISTERED';
 export const USER_AUTHENTICATED = 'USER_AUTHENTICATED';
@@ -45,8 +45,7 @@ export const register = (user, history) => dispatch => {
     });
 };
 
-export const login = (user) => {
-  console.log('hellow from login')
+export const login = (user, history) => dispatch => {
   const { username, password } = user;
   console.log(`action login username: ${username} password: ${password}`);
   axios
@@ -56,11 +55,19 @@ export const login = (user) => {
       console.log('response.data', JSON.stringify(response.data))
       sessionStorage.setItem('token', response.data.token);
       sessionStorage.setItem('id', response.data.id);
-      // history.push('/events');
+      dispatch({
+        type: USER_AUTHENTICATED,
+      });
+      dispatch({
+        type: GET_USER,
+        payload: [response.data.user.record],
+      });
+      history.push('/events');
       // console.log(`history keys ${Object.keys(history)}`);
     })
     .catch(err => {
-      console.log(`login ${err}`);;
+      console.log(`login ${err}`);
+      dispatch(authError('Incorrect email/password combo'));
     });
 };
 
