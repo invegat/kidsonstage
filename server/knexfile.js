@@ -20,7 +20,7 @@ module.exports = {
     host: a[d.host],
     port: a[d.port],
     ssl: {
-      rejectUnauthorized: true,
+      rejectUnauthorized: false,
     },
   },
   searchPath: ['knex', 'public'],
