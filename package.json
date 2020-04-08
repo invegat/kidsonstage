@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "How to use create-react-app with a custom Node API on Heroku",
   "engines": {
-    "node": "8.12.0"
+    "npm": "6.x"
   },
   "scripts": {
     "build": "babel server -d dist",
