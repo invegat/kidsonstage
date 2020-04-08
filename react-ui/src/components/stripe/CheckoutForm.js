@@ -62,7 +62,7 @@ class CheckoutForm extends React.Component {
             email,
           },
         }, (err, res) => {
-          if (!err) {
+          if (res) {
             console.log('Charge success: ', JSON.stringify(res.data));
             // ACTIVATE EVENT REQUEST
             const { eventId } = res.data;
