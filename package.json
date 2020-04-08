@@ -6,6 +6,7 @@
     "node": "12.x"
   },
   "scripts": {
+    "heroku-prebuild": "npm cache verify",
     "build": "babel server -d dist",
     "ostart": "nodemon server --exec babel",
     "nstart": "nodemon --exec babel-node server/index.js",
