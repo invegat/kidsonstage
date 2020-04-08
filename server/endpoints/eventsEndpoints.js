@@ -46,6 +46,7 @@ eventsRouter.delete('/', function (req, res) {
       res.status(200).json(id);
     })
     .catch(function (err) {
+      console.log('del error', err)
       res.status(500).json({ error: 'Could not delete event from DB', err });
     });
 });

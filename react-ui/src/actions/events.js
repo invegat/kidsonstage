@@ -356,7 +356,7 @@ export const deleteEvent = eventId => dispatch => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.log('delete err', err);
       dispatch(authError('Failed to delete event'));
     });
 };
