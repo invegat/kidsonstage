@@ -97,7 +97,7 @@ eventsRouter.put('/:eventId/activate', function (req, res) {
   const { eventId } = req.params;
   const { status } = req.body;
   console.log(`eventId ${eventId} status: ${status}`);
-  if (status === 'succeeded') {
+  if (status === 'succeeded' || status === undefined) {
     db('events')
       .where('id', eventId)
       .select('activated')
