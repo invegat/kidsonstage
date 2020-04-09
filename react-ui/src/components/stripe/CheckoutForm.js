@@ -65,8 +65,8 @@ class CheckoutForm extends React.Component {
           if (res) {
             console.log('Charge success: ', JSON.stringify(res.data));
             // ACTIVATE EVENT REQUEST
-            const { eventId } = res.data;
-            eventId = eventId ?? this.props.eventId
+            // const { eventId } = res.data;
+            const eventId = this.props.eventId
             AxiosPromise({
               verb: 'put',
               url: `/events/${eventId}/activate`,
